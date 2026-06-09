@@ -9,6 +9,16 @@ vi.mock('ai', () => ({
   generateObject: vi.fn(),
 }));
 
+// Mock the provider to avoid needing OPENROUTER_API_KEY
+vi.mock('@/lib/ai/provider', () => ({
+  models: {
+    timeline: 'mock-timeline-model',
+    entity: 'mock-entity-model',
+    parser: 'mock-parser-model',
+    fallback: 'mock-fallback-model',
+  },
+}));
+
 import { generateObject } from 'ai';
 
 const mockGenerateObject = vi.mocked(generateObject);

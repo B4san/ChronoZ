@@ -1,57 +1,32 @@
-import { openai } from '@ai-sdk/openai';
-import { anthropic } from '@ai-sdk/anthropic';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 
-const openrouter = process.env.OPENROUTER_API_KEY
-  ? createOpenRouter({
-      apiKey: process.env.OPENROUTER_API_KEY,
-      appUrl: process.env.OPENROUTER_SITE_URL,
-      appName: process.env.OPENROUTER_SITE_TITLE || 'ChronoZ',
-    })
-  : null;
+const DEFAULT_MODEL = 'openrouter/auto';
 
-function getModel(
-  openrouterModel: string,
-  openaiModel: string,
-  anthropicModel?: string
-) {
-  if (openrouter) {
-    return openrouter.chat(openrouterModel);
+function getOpenRouter() {
+  if (!process.env.OPENROUTER_API_KEY) {
+    throw new Error('OPENROUTER_API_KEY is required. Get one at https://openrouter.ai/keys');
   }
-  if (anthropicModel && process.env.ANTHROPIC_API_KEY) {
-    return anthropic(anthropicModel);
-  }
-  return openai(openaiModel);
+  return createOpenRouter({
+    apiKey: process.env.OPENROUTER_API_KEY,
+    appUrl: process.env.OPENROUTER_SITE_URL,
+    appName: process.env.OPENROUTER_SITE_TITLE || 'ChronoZ',
+  });
 }
 
 export const models = {
-  timeline: getModel(
-    process.env.OPENROUTER_TIMELINE_MODEL || 'anthropic/claude-sonnet-4-20250514',
-    'gpt-4o',
-    'claude-sonnet-4-20250514'
-  ),
-  entity: getModel(
-    process.env.OPENROUTER_ENTITY_MODEL || 'openai/gpt-4o',
-    'gpt-4o'
-  ),
-  parser: getModel(
-    process.env.OPENROUTER_PARSER_MODEL || 'openai/gpt-4o-mini',
-    'gpt-4o-mini'
-  ),
-  fallback: getModel(
-    process.env.OPENROUTER_FALLBACK_MODEL || 'openai/gpt-4o-mini',
-    'gpt-4o-mini'
-  ),
+  get timeline() { return getOpenRouter().chat(process.env.OPENROUTER_TIMELINE_MODEL || DEFAULT_MODEL); },
+  get entity() { return getOpenRouter().chat(process.env.OPENROUTER_ENTITY_MODEL || DEFAULT_MODEL); },
+  get parser() { return getOpenRouter().chat(process.env.OPENROUTER_PARSER_MODEL || DEFAULT_MODEL); },
+  get fallback() { return getOpenRouter().chat(DEFAULT_MODEL); },
 } as const;
 
 export type ModelKey = keyof typeof models;
 
 export function getProviderInfo() {
-  if (openrouter) {
-    return { provider: 'openrouter', mode: 'unified' };
-  }
-  if (process.env.ANTHROPIC_API_KEY) {
-    return { provider: 'anthropic+openai', mode: 'direct' };
-  }
-  return { provider: 'openai', mode: 'direct' };
+  return {
+    provider: 'openrouter',
+    mode: 'unified',
+    model: DEFAULT_MODEL,
+    hasKey: !!process.env.OPENROUTER_API_KEY,
+  };
 }
