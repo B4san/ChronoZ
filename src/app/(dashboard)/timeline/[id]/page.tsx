@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { TimelineExplorer } from '@/components/timeline-explorer';
+import { ConsistencyPanel } from '@/components/consistency-panel';
 import { Badge } from '@/components/ui/badge';
 import type { TimelineResponse, TimelineEvent, Company, Product } from '@/types';
 
@@ -83,11 +84,18 @@ export default function TimelinePage() {
           </div>
         </div>
 
-        <TimelineExplorer
-          events={events}
-          companies={companies}
-          products={products}
-        />
+        <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
+          <TimelineExplorer
+            events={events}
+            companies={companies}
+            products={products}
+          />
+          {timeline.status === 'completed' && (
+            <div className="space-y-4">
+              <ConsistencyPanel timelineId={id} />
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );
