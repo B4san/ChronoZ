@@ -37,10 +37,10 @@ export default function TimelinePage() {
 
   if (loading) {
     return (
-      <main className="min-h-screen p-8">
+      <main className="min-h-screen p-4 sm:p-8">
         <div className="max-w-6xl mx-auto space-y-4">
           <div className="h-8 w-64 bg-muted animate-pulse rounded" />
-          <div className="h-4 w-96 bg-muted animate-pulse rounded" />
+          <div className="h-4 w-96 max-w-full bg-muted animate-pulse rounded" />
           <div className="space-y-4 mt-8">
             {[1, 2, 3].map((i) => (
               <div key={i} className="h-32 bg-muted animate-pulse rounded-lg" />
@@ -63,14 +63,14 @@ export default function TimelinePage() {
   }
 
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <main className="min-h-screen p-4 sm:p-8">
+      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold">{timeline.name}</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold">{timeline.name}</h1>
+          <p className="text-muted-foreground text-sm sm:text-base">
             Divergence: {timeline.divergence.description}
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge variant={timeline.status === 'completed' ? 'default' : 'secondary'}>
               {timeline.status}
             </Badge>

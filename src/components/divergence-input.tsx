@@ -28,12 +28,12 @@ export function DivergenceInput({ onSubmit, isLoading }: DivergenceInputProps) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto space-y-6">
+    <div className="w-full max-w-2xl mx-auto space-y-4 sm:space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="text-4xl font-bold tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
           Chronos Engine
         </h1>
-        <p className="text-muted-foreground text-lg">
+        <p className="text-muted-foreground text-base sm:text-lg">
           Motor Procedural de Civilizaciones Alternativas
         </p>
       </div>
@@ -44,13 +44,13 @@ export function DivergenceInput({ onSubmit, isLoading }: DivergenceInputProps) {
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder="¿Qué habría pasado si...?"
-            className="h-14 text-lg px-6"
+            className="h-12 sm:h-14 text-base sm:text-lg px-4 sm:px-6"
             disabled={isLoading}
           />
         </div>
         <Button
           type="submit"
-          className="w-full h-12 text-lg"
+          className="w-full h-10 sm:h-12 text-base sm:text-lg"
           disabled={value.trim().length < 10 || isLoading}
         >
           {isLoading ? 'Generando...' : 'Crear Timeline'}

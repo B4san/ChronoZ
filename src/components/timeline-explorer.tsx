@@ -48,7 +48,7 @@ export function TimelineExplorer({ events, companies, products }: TimelineExplor
               <div className="h-px flex-1 bg-border" />
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {decadeEvents.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
@@ -59,7 +59,7 @@ export function TimelineExplorer({ events, companies, products }: TimelineExplor
                 <h3 className="text-sm font-medium text-muted-foreground">
                   Empresas Fundadas
                 </h3>
-                <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                   {decadeCompanies.map((company) => (
                     <EntityCard
                       key={company.id}
@@ -76,7 +76,7 @@ export function TimelineExplorer({ events, companies, products }: TimelineExplor
                 <h3 className="text-sm font-medium text-muted-foreground">
                   Productos Lanzados
                 </h3>
-                <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                   {decadeProducts.map((product) => (
                     <EntityCard
                       key={product.id}

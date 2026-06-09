@@ -99,9 +99,10 @@ export async function GET(
         controller.close();
       } catch (error) {
         console.error('Stream error:', error);
-        const encoder = new TextEncoder();
+        const message = error instanceof Error ? error.message : 'Generation failed';
+        updateTimeline(id, { status: 'failed' });
         controller.enqueue(
-          encoder.encode(`event: error\ndata: ${JSON.stringify({ message: 'Generation failed' })}\n\n`)
+          encoder.encode(`event: error\ndata: ${JSON.stringify({ message })}\n\n`)
         );
         controller.close();
       }
