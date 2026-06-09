@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { TimelineExplorer } from '@/components/timeline-explorer';
 import { ConsistencyPanel } from '@/components/consistency-panel';
+import { TimelineStats } from '@/components/timeline-stats';
 import { Badge } from '@/components/ui/badge';
 import type { TimelineResponse, TimelineEvent, Company, Product } from '@/types';
 
@@ -83,6 +84,13 @@ export default function TimelinePage() {
             </Badge>
           </div>
         </div>
+
+        <TimelineStats
+          events={events}
+          companies={companies}
+          products={products}
+          divergenceYear={timeline.divergence.year}
+        />
 
         <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
           <TimelineExplorer
