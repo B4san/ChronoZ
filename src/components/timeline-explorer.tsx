@@ -1,9 +1,22 @@
 'use client';
 
+import { useState } from 'react';
 import { EventCard } from './event-card';
 import { EntityCard } from './entity-card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import type { TimelineEvent, Company, Product } from '@/types';
+
+const CATEGORIES = ['all', 'technology', 'politics', 'economics', 'culture', 'science', 'military'] as const;
+const CATEGORY_LABELS: Record<string, string> = {
+  all: 'Todos',
+  technology: 'Tech',
+  politics: 'Política',
+  economics: 'Economía',
+  culture: 'Cultura',
+  science: 'Ciencia',
+  military: 'Militar',
+};
 
 interface TimelineExplorerProps {
   events: TimelineEvent[];
@@ -12,26 +25,47 @@ interface TimelineExplorerProps {
 }
 
 export function TimelineExplorer({ events, companies, products }: TimelineExplorerProps) {
+  const [filter, setFilter] = useState<string>('all');
+
+  const filteredEvents = filter === 'all'
+    ? events
+    : events.filter((e) => e.category === filter);
+
   const decades = Array.from(
-    new Set(events.map((e) => Math.floor(e.year / 10) * 10))
+    new Set(filteredEvents.map((e) => Math.floor(e.year / 10) * 10))
   ).sort((a, b) => a - b);
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-        <span className="flex items-center gap-1">
-          <Badge variant="secondary">{events.length}</Badge> eventos
-        </span>
-        <span className="flex items-center gap-1">
-          <Badge variant="secondary">{companies.length}</Badge> empresas
-        </span>
-        <span className="flex items-center gap-1">
-          <Badge variant="secondary">{products.length}</Badge> productos
-        </span>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <Badge variant="secondary">{events.length}</Badge> eventos
+          </span>
+          <span className="flex items-center gap-1">
+            <Badge variant="secondary">{companies.length}</Badge> empresas
+          </span>
+          <span className="flex items-center gap-1">
+            <Badge variant="secondary">{products.length}</Badge> productos
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-1">
+          {CATEGORIES.map((cat) => (
+            <Button
+              key={cat}
+              variant={filter === cat ? 'default' : 'ghost'}
+              size="sm"
+              className="text-xs h-7"
+              onClick={() => setFilter(cat)}
+            >
+              {CATEGORY_LABELS[cat]}
+            </Button>
+          ))}
+        </div>
       </div>
 
       {decades.map((decade) => {
-        const decadeEvents = events.filter(
+        const decadeEvents = filteredEvents.filter(
           (e) => e.year >= decade && e.year < decade + 10
         );
         const decadeCompanies = companies.filter(
