@@ -2,6 +2,7 @@ import { getTimeline, updateTimeline, addEventsToTimeline, addCompaniesToTimelin
 import { generateDecadeEvents } from '@/lib/ai/chains/timeline-generator';
 import { generateCompaniesForDecade } from '@/lib/ai/chains/company-generator';
 import { generateProductsForDecade } from '@/lib/ai/chains/product-generator';
+import { validateTimeline } from '@/lib/consistency';
 import { generateId } from '@/lib/store';
 import type { TimelineEvent, Company, Product } from '@/types';
 
@@ -87,7 +88,7 @@ export async function GET(
 
         updateTimeline(id, {
           status: 'completed',
-          consistencyScore: 0.88,
+          consistencyScore: validateTimeline(getTimeline(id)!).score,
           completedAt: new Date(),
         });
 
