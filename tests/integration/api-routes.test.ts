@@ -77,7 +77,7 @@ vi.mock('@/lib/ai/chains/product-generator', () => ({
 
 // Import after mocks
 import { GET, POST } from '@/app/api/v1/timelines/route';
-import { GET as GET_TIMELINE } from '@/app/api/v1/timelines/[id]/route';
+import { GET as GET_TIMELINE, DELETE as DELETE_TIMELINE } from '@/app/api/v1/timelines/[id]/route';
 import { createTimeline } from '@/lib/store';
 
 describe('POST /api/v1/timelines', () => {
@@ -162,6 +162,40 @@ describe('GET /api/v1/timelines/:id', () => {
     const response = await GET_TIMELINE(
       new Request('http://localhost/api/v1/timelines/tl_nonexistent'),
       { params: Promise.resolve({ id: 'tl_nonexistent' }) }
+    );
+
+    expect(response.status).toBe(404);
+  });
+});
+
+describe('DELETE /api/v1/timelines/:id', () => {
+  it('deletes an existing timeline', async () => {
+    const timeline = createTimeline({
+      name: 'To Delete',
+      divergenceYear: 1980,
+      divergencePoint: 'test',
+      description: 'Timeline to be deleted',
+    });
+
+    const response = await DELETE_TIMELINE(
+      new Request(`http://localhost/api/v1/timelines/${timeline.id}`, { method: 'DELETE' }),
+      { params: Promise.resolve({ id: timeline.id }) }
+    );
+
+    expect(response.status).toBe(204);
+
+    // Verify it's gone
+    const getResponse = await GET_TIMELINE(
+      new Request(`http://localhost/api/v1/timelines/${timeline.id}`),
+      { params: Promise.resolve({ id: timeline.id }) }
+    );
+    expect(getResponse.status).toBe(404);
+  });
+
+  it('returns 404 for non-existent timeline', async () => {
+    const response = await DELETE_TIMELINE(
+      new Request('http://localhost/api/v1/timelines/tl_gone', { method: 'DELETE' }),
+      { params: Promise.resolve({ id: 'tl_gone' }) }
     );
 
     expect(response.status).toBe(404);

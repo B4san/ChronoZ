@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getTimeline } from '@/lib/store';
+import { getTimeline, deleteTimeline } from '@/lib/store';
 
 export async function GET(
   _request: Request,
@@ -42,4 +42,21 @@ export async function GET(
     createdAt: timeline.createdAt.toISOString(),
     completedAt: timeline.completedAt?.toISOString(),
   });
+}
+
+export async function DELETE(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const deleted = deleteTimeline(id);
+
+  if (!deleted) {
+    return NextResponse.json(
+      { error: { code: 'NOT_FOUND', message: 'Timeline not found', statusCode: 404 } },
+      { status: 404 }
+    );
+  }
+
+  return new Response(null, { status: 204 });
 }
