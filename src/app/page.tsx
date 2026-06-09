@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { DivergenceInput } from '@/components/divergence-input';
 import { StreamingIndicator } from '@/components/streaming-indicator';
@@ -8,10 +8,7 @@ import { useStream } from '@/hooks/use-stream';
 
 export default function HomePage() {
   const router = useRouter();
-  const [timelineId, setTimelineId] = useState<string | null>(null);
-
   const handleComplete = useCallback((id: string) => {
-    setTimelineId(id);
     router.push(`/timeline/${id}`);
   }, [router]);
 
@@ -37,7 +34,6 @@ export default function HomePage() {
       }
 
       const data = await response.json();
-      setTimelineId(data.id);
       startStream(data.streamUrl);
     } catch (error) {
       console.error('Error:', error);

@@ -4,8 +4,6 @@ import {
   getTimeline,
   updateTimeline,
   addEventsToTimeline,
-  addCompaniesToTimeline,
-  addProductsToTimeline,
   listTimelines,
   deleteTimeline,
   generateId,
